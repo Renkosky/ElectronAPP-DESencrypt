@@ -1,12 +1,12 @@
 <template>
     <div>
-        <input type="text"> 
+        <input type="text" class="plaintext"> 
         <div @click="getLen">输入明文</div>
         <!-- <EnEcb :EnEcb="textLen"></EnEcb> -->
         <div class='ecbmode'>
-        <div v-for="item in textLen" :key="item.id">
-            <div><input type="text" class="plaintext"></div>
-            <div class="enc" @click='enc()'>DES加密</div>
+        <div v-for="(item,index) in textLen" :key="index">
+            <div class="plaintextgroup">{{ encgroups[index] }}</div>
+            <div class="enc" @click='enc(index)'>DES加密</div>
             <div class="result">
             </div>
         </div>
@@ -25,7 +25,8 @@
     },
     data(){
         return {
-            textLen:0
+            textLen:0,
+            encgroups:[]
         }
     },
     methods: {
@@ -33,15 +34,27 @@
             this.textLen = Math.ceil((document.getElementsByTagName('input')[0].value.length)/8);
             if(this.textLen<1){
                 this.textLen = 1;
-            }        
-            return this.textLen;
+            }
+            var plaintext = document.getElementsByClassName('plaintext')[0].value.split('');
+            var plaintxtgroup = [];
+            var group=''; 
+            for (var i = 0; i < plaintext.length; i++) {      
+                group += plaintext[i]
+                if ((7/i) == 1 || i == plaintext.length-1) {
+                   plaintxtgroup.push(group);                  
+                   group = ''; 
+                }                            
+            };
+            var encgroup = document.getElementsByClassName('plaintextgroup')
+            for (var i = 0; i < plaintxtgroup.length; i++) {
+                 this.encgroups[i] = plaintxtgroup[i];              
+            }            
+           
         },
-        enc(){
-            var encrypt = document.getElementsByClassName('enc')[0];
-            var result = document.getElementsByClassName('result')[0];
-            var plaintext = document.getElementsByClassName('plaintext')[0].value;
+        enc(id){
+            var result = document.getElementsByClassName('result')[id];
             var keyHex = CryptoJS.enc.Utf8.parse('01234567');  
-            var encrypted = CryptoJS.DES.encrypt(plaintext, keyHex, {
+            var encrypted = CryptoJS.DES.encrypt(this.encgroups[id], keyHex, {
             mode: CryptoJS.mode.ECB,
             padding: CryptoJS.pad.Pkcs7
             });
