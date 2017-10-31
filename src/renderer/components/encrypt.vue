@@ -60,7 +60,8 @@
         },
         enc(id){
             var result = document.getElementsByClassName('result')[id];
-            var keyHex = CryptoJS.enc.Utf8.parse('01234567');  
+            var Key = document.getElementsByClassName('key')[0].value;
+            var keyHex = CryptoJS.enc.Utf8.parse(Key);  
             var encrypted = CryptoJS.DES.encrypt(this.encgroups[id], keyHex, {
             mode: CryptoJS.mode.ECB,
             padding: CryptoJS.pad.Pkcs7
@@ -73,6 +74,9 @@
 <style>
     *{
         font-family: Microsoft YaHei,Arial, Helvetica, sans-serif;
+    }
+    body{
+        min-width: 750px;
     }
     h1 {
         margin-bottom: 20px;
@@ -94,21 +98,39 @@
     }
     .ecbmode{
         display: flex;
-        margin: 60px 20px 20px 20px; 
+        margin: 60px 20px 20px 20px;
+        
     }
     .ecbmode div {
-        flex: 1 0 auto;
+        flex-wrap: wrap;
+        flex: 1 0 100px;
+        
     }
     .plaintextgroup {
         margin-bottom: 50px;
+        
         font-size:25px;
         color: #3a585f 
     }
     .groups-title{
         margin-bottom: 50px;
-        color: #3a585f 
+        color: #3a585f;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #87ceeb
     }
     .groups {
         margin-right: 40px;
+        padding: 40px;
+        box-shadow: 1px 1px 5px rgb(220, 220, 220);
+        cursor: pointer;
     }
+    .ecbmode :hover{
+        box-shadow: 0px 11px 20px rgb(220, 220, 220);
+    }
+    .result{
+        margin-top: 50px;
+        color: #3a585f;
+        font-size:15px;
+    }
+  
 </style>
